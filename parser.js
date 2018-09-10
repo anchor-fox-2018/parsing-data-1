@@ -37,7 +37,7 @@ class PersonParser {
       let last_name = inputPeople[2];
       let email = inputPeople[3];
       let phone = inputPeople[4];
-      let created_at = inputPeople[5];
+      let created_at = new Date(inputPeople[5]);
       
       let dudette = new Person(id, first_name, last_name, email, phone, created_at);
       this._people.push(dudette);
@@ -57,7 +57,7 @@ class PersonParser {
     let last_name = inputPeople[2];
     let email = inputPeople[3];
     let phone = inputPeople[4];
-    let created_at = inputPeople[5];
+    let created_at = new Date(inputPeople[5]);
 
     let dudette = new Person(id, first_name, last_name, email, phone, created_at);
 
