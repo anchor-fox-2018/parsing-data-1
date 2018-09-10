@@ -10,14 +10,13 @@ var nameList = fs.readFileSync('people.csv')
 class Person {
   // Look at the above CSV file
   // What attributes should a Person object have?
-  constructor(input) {
-    let splitted = input.split(',');
-    this._id = splitted[0];
-    this._first_name = splitted[1];
-    this._last_name = splitted[2];
-    this._email = splitted[3];
-    this._phone = splitted[4];
-    this._created_at = splitted[5];
+  constructor(id, first_name, last_name, email, phone, created_at) {
+    this._id = id;
+    this._first_name = first_name;
+    this._last_name = last_name;
+    this._email = email;
+    this._phone = phone;
+    this._created_at = created_at;
   }
 }
 
@@ -31,10 +30,19 @@ class PersonParser {
 
   rollPeople() {
     for (let i = 1; i < this._file.length; i++) {
-      let dudette = new Person(nameList[i]);
+      let inputPeople = nameList[i].split(',');
+
+      let id = inputPeople[0];
+      let first_name = inputPeople[1];
+      let last_name = inputPeople[2];
+      let email = inputPeople[3];
+      let phone = inputPeople[4];
+      let created_at = inputPeople[5];
+      
+      let dudette = new Person(id, first_name, last_name, email, phone, created_at);
       this._people.push(dudette);
     }
-    return this.people;
+    return this._people;
   }
 
   get people() {
