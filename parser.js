@@ -1,15 +1,15 @@
 "use strict"
-
+const fs = require('fs')
 class Person {
   // Look at the above CSV file
   // What attributes should a Person object have?
-  constructor(people_list) {
-    this._id = people_list[0];
-    this._firstName = people_list[1];
-    this._lastName = people_list[2];
-    this._email = people_list[3];
-    this._phone = people_list[4];
-    this._createdAt = people_list[5];
+  constructor(id, first_name, last_name, email, phone, created_at) {
+    this.id = id;
+    this.first_name = first_name;
+    this.last_name = last_name;
+    this.email = email;
+    this.phone = phone;
+    this.created_at = created_at;
   }
 }
 
@@ -20,25 +20,46 @@ class PersonParser {
     this._people = [];
   }
 
-  people() {
-    for (var i = 1; i < this._file.length; i++) {
-      let arrayOfPeople = this._file[i].split(',');
-      let obj = new Person(arrayOfPeople);
+  parsingData() {
+    let people_string = fs.readFileSync(this._file)
+      .toString()
+      .split("\n")
+
+    for (var i = 1; i < people_string.length -1; i++) {
+      let arrayOfPeople = people_string[i].split(',');
+      let obj = new Person(arrayOfPeople[0], arrayOfPeople[1], arrayOfPeople[2], arrayOfPeople[3], arrayOfPeople[4], arrayOfPeople[5]);
       this._people.push(obj);
     }
     return this._people;
   }
 
-  addPerson() {}
+  addPerson(personBaru) {
+    this._people.push(personBaru);
+  }
 
+  saveNewList () {
+    let convert = '' + Object.keys(this._people[0])
+    for (var i = 1; i < this._people.length; i++) {
+      let temp = Object.values(this._people[i]);
+      convert += '\n' + temp;
+    }
+    fs.writeFileSync('newPeople.csv', convert, 'utf8');
+  }
+
+  get people() {
+    let obj = {
+      size: this._people.length
+    }
+    return obj;
+  }
 }
-var fs = require('fs');
-var people_list = fs.readFileSync('people.csv')
-  .toString()
-  .split("\n")
 
-let parser = new PersonParser(people_list);
+let parser = new PersonParser('people.csv');
+parser.parsingData();
 
-console.log(parser.people());
+let anastasia = new Person('201','Anastasia', 'Santoso', 'tralalala@gmail.com', '1515235442', '2018-07-11T12:09:23-34:00')
 
-//console.log(`There are ${parser.people.size} people in the file '${parser.file}'.`)
+parser.addPerson(anastasia);
+parser.saveNewList();
+
+console.log(`There are ${parser.people.size} people in the file '${parser._file}'.`)
