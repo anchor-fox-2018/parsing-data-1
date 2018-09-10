@@ -28,8 +28,8 @@ class PersonParser {
     this._people = [];
   }
 
-  rollPeople() {
-    for (let i = 1; i < this._file.length; i++) {
+  parsingData() {
+    for (let i = 1; i < this._file.length - 1; i++) {
       let inputPeople = nameList[i].split(',');
 
       let id = inputPeople[0];
@@ -49,10 +49,34 @@ class PersonParser {
     return this._people
   }
 
-  set people(input) {
+  addPerson(input) {
+    let inputPeople = input.split(',')
+
+    let id = inputPeople[0];
+    let first_name = inputPeople[1];
+    let last_name = inputPeople[2];
+    let email = inputPeople[3];
+    let phone = inputPeople[4];
+    let created_at = inputPeople[5];
+
+    let dudette = new Person(id, first_name, last_name, email, phone, created_at);
+
+    this._people.push(dudette)
   }
 
-  addPerson() {}
+  save() {
+    let parent = '';
+    for (let i = 0; i < this._people.length; i++) {
+      let temp = `${this._people[i]._id},${this._people[i]._first_name},${this._people[i]._last_name},${this._people[i]._email},${this._people[i]._phone},${this._people[i]._created_at}` + '\n';
+      parent += temp;
+    }
+    fs.writeFileSync('people3.csv', parent, 'utf8');
+  }
 }
-let dudes = new PersonParser(nameList).rollPeople()
-console.log(dudes);
+let dudes = new PersonParser(nameList);
+
+dudes.parsingData();
+
+dudes.addPerson('200,Merritt,Joyce,malesuada.fringilla@elitNullafacilisi.edu,1-702-580-4785,2012-02-22T10:09:03-08:00');
+
+dudes.save();
