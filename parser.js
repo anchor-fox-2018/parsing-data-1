@@ -10,6 +10,7 @@ class Person {
     this._last_name = input.last_name;
     this._email = input.email;
     this._phone = input.phone;
+    this._created_at = new Date();
   }
 
 }
@@ -22,19 +23,19 @@ class PersonParser {
   }
 
   get people() {
-    return this._people
+    return this._people.length;
   }
-
+  
   generateData(){
     let people = fs.readFileSync('people.csv').toString().split('\n') ;
-    console.log(people);
-    this._people = [];
+    // console.log(people);
+    // this._people = [];
     // console.log(people[])
     for(let i = 0; i < people.length; i++){
       let dataPerson = people[i].split(',')
       // console.log(dataPerson);
       let obj = {}
-      obj.id = dataPerson[0];
+      obj.id = Number(dataPerson[0]);
       obj.first_name = dataPerson[1];
       obj.last_name = dataPerson[2];
       obj.email = dataPerson[3];
@@ -45,10 +46,21 @@ class PersonParser {
     return this._people;
     
   }
+  
+  
 
   
-  addPerson() {
-    return new Person;
+  addPerson(input) {
+    this._people.push(input);
+  }
+
+  save(filename){
+    let string = ''
+    for(let i = 0 ; i < this._people.length; i++){
+      string += Object.values(this._people[i])
+      string += '\n'
+    }
+    fs.writeFileSync(filename, string, {encoding: 'utf8', mode: 0o666, flag: 'w'})
   }
 
 }
@@ -58,5 +70,13 @@ class PersonParser {
 
 let parser = new PersonParser('people.csv')
 console.log(parser.generateData());
+let newPerson = {id: undefined, first_name: 'Muhamad', last_name: 'Abduh', email: 'muhamad.abduh.muh@gmail.com', phone: '085722507840'};
+parser.addPerson(new Person(newPerson));
+parser.save('output.csv');
+
+// console.log(new Date());
+// let abduh = new Person(newPerson);
+// console.log(abduh);
+
 
 // console.log(`There are ${parser.people.size} people in the file '${parser.file}'.`)
